@@ -220,5 +220,4 @@ npm run build
 ```
 
 
-8. **Chart Navigation** — Click any node → navigate to that employee's profile
-9. **API Documentation** — Visit /docs for interactive Swagger UI
+
