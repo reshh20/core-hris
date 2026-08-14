@@ -12,6 +12,9 @@ export function useEmployees() {
     department_id: '',
     status: '',
   });
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
 
   const loadEmployees = useCallback(async () => {
     try {
@@ -22,15 +25,19 @@ export function useEmployees() {
       if (filters.search) params.search = filters.search;
       if (filters.department_id) params.department_id = filters.department_id;
       if (filters.status) params.status = filters.status;
+      params.page = page;
+      params.per_page = 10;
 
       const data = await fetchEmployees(params);
-      setEmployees(data);
+      setEmployees(data.items || []);
+      setTotal(data.total || 0);
+      setTotalPages(data.total_pages || 1);
     } catch (err) {
       setError(err.friendlyMessage || 'Failed to load employees');
     } finally {
       setLoading(false);
     }
-  }, [filters]);
+  }, [filters, page]);
 
   const loadDepartments = useCallback(async () => {
     try {
@@ -54,10 +61,12 @@ export function useEmployees() {
 
   const updateFilter = (key, value) => {
     setFilters((prev) => ({ ...prev, [key]: value }));
+    setPage(1);
   };
 
   const clearFilters = () => {
     setFilters({ search: '', department_id: '', status: '' });
+    setPage(1);
   };
 
   return {
@@ -66,6 +75,10 @@ export function useEmployees() {
     loading,
     error,
     filters,
+    page,
+    total,
+    totalPages,
+    setPage,
     updateFilter,
     clearFilters,
     refresh: loadEmployees,

@@ -70,7 +70,9 @@ def get_employees(
     department_id: int | None = None,
     status_filter: str | None = None,
     location: str | None = None,
-) -> list[EmployeeListResponse]:
+    page: int = 1,
+    per_page: int = 10,
+) -> dict:
     query = db.query(Employee).options(
         joinedload(Employee.department),
         joinedload(Employee.position),
@@ -97,12 +99,15 @@ def get_employees(
     if location:
         query = query.filter(Employee.location.ilike(f"%{location.strip()}%"))
 
-    employees = query.order_by(Employee.employee_id).all()
+    total = query.count()
+    total_pages = max(1, (total + per_page - 1) // per_page)
 
-    result = []
+    employees = query.order_by(Employee.employee_id).offset((page - 1) * per_page).limit(per_page).all()
+
+    items = []
     for emp in employees:
         emp_status = emp.employment_status.value if hasattr(emp.employment_status, 'value') else emp.employment_status
-        result.append(
+        items.append(
             EmployeeListResponse(
                 id=emp.id,
                 employee_id=emp.employee_id,
@@ -118,7 +123,14 @@ def get_employees(
                 position=emp.position,
             )
         )
-    return result
+
+    return {
+        "items": items,
+        "total": total,
+        "page": page,
+        "per_page": per_page,
+        "total_pages": total_pages,
+    }
 
 
 def get_employee_by_id(db: Session, employee_db_id: int) -> EmployeeResponse:

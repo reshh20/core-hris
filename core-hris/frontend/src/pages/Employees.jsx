@@ -16,6 +16,10 @@ export default function Employees() {
     loading,
     error,
     filters,
+    page,
+    total,
+    totalPages,
+    setPage,
     updateFilter,
     clearFilters,
     refresh,
@@ -35,7 +39,7 @@ export default function Employees() {
             <div>
               <h1 className="text-2xl font-bold text-surface-900">Employee Directory</h1>
               <p className="text-sm text-surface-500">
-                {!loading && `${employees.length} employee${employees.length !== 1 ? 's' : ''} found`}
+                {!loading && `${total} employee${total !== 1 ? 's' : ''} found`}
               </p>
             </div>
           </div>
@@ -80,7 +84,39 @@ export default function Employees() {
           }
         />
       ) : (
-        <EmployeeTable employees={employees} />
+        <>
+          <EmployeeTable employees={employees} />
+          {total > 0 && (
+            <div className="flex items-center justify-between px-4 py-3 bg-white border border-surface-200 sm:px-6 mt-4 rounded-xl shadow-sm">
+              <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                <div>
+                  <p className="text-sm text-surface-700">
+                    Showing <span className="font-medium">{(page - 1) * 10 + 1}</span> to <span className="font-medium">{Math.min(page * 10, total)}</span> of{' '}
+                    <span className="font-medium">{total}</span> results
+                  </p>
+                </div>
+                <div>
+                  <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                    <button
+                      onClick={() => setPage(page - 1)}
+                      disabled={page === 1}
+                      className="relative inline-flex items-center px-4 py-2 border border-surface-300 text-sm font-medium rounded-l-md text-surface-700 bg-white hover:bg-surface-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      Previous
+                    </button>
+                    <button
+                      onClick={() => setPage(page + 1)}
+                      disabled={page === totalPages || totalPages === 0}
+                      className="relative inline-flex items-center px-4 py-2 border border-surface-300 text-sm font-medium rounded-r-md text-surface-700 bg-white hover:bg-surface-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      Next
+                    </button>
+                  </nav>
+                </div>
+              </div>
+            </div>
+          )}
+        </>
       )}
 
       <AddEmployeeModal

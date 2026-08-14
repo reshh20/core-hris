@@ -253,6 +253,15 @@ class EmployeeListResponse(BaseModel):
     model_config = {"from_attributes": True}
 
 
+class EmployeePaginatedResponse(BaseModel):
+    items: list[EmployeeListResponse]
+    total: int
+    page: int
+    per_page: int
+    total_pages: int
+
+
+
 class OrgChartNode(BaseModel):
 
     id: int

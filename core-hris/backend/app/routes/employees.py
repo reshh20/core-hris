@@ -8,6 +8,7 @@ from app.schemas.employee import (
     EmployeeUpdate,
     EmployeeResponse,
     EmployeeListResponse,
+    EmployeePaginatedResponse,
 )
 from app.services import employee_service
 
@@ -16,7 +17,7 @@ router = APIRouter(prefix="/api/employees", tags=["Employees"])
 
 @router.get(
     "",
-    response_model=list[EmployeeListResponse],
+    response_model=EmployeePaginatedResponse,
     summary="Get all employees",
     description="Retrieve all employees with optional search, department, status, and location filters.",
 )
@@ -25,6 +26,8 @@ def get_employees(
     department_id: int | None = Query(None, description="Filter by department ID"),
     status: str | None = Query(None, alias="status", description="Filter by employment status"),
     location: str | None = Query(None, description="Filter by location"),
+    page: int = Query(1, ge=1, description="Page number"),
+    per_page: int = Query(10, ge=1, le=100, description="Items per page"),
     db: Session = Depends(get_db),
 ):
     return employee_service.get_employees(
@@ -33,6 +36,8 @@ def get_employees(
         department_id=department_id,
         status_filter=status,
         location=location,
+        page=page,
+        per_page=per_page,
     )
 
 
