@@ -1,9 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { getInitials } from '../utils/formatName';
 
-/**
- * Custom React Flow node for the organization chart.
- */
+
 export default function EmployeeNode({ data }) {
   const navigate = useNavigate();
   const { firstName, lastName, positionTitle, departmentName, profileImage, employeeId } = data;

@@ -18,9 +18,7 @@ const NODE_HEIGHT = 80;
 const HORIZONTAL_GAP = 40;
 const VERTICAL_GAP = 100;
 
-/**
- * Calculate the width of a subtree (in terms of leaf nodes).
- */
+
 function getSubtreeWidth(node) {
   if (!node.children || node.children.length === 0) {
     return NODE_WIDTH;
@@ -32,9 +30,7 @@ function getSubtreeWidth(node) {
   return Math.max(NODE_WIDTH, childrenWidth);
 }
 
-/**
- * Build React Flow nodes and edges from the nested org chart data.
- */
+
 function buildNodesAndEdges(orgData) {
   const nodes = [];
   const edges = [];
@@ -85,7 +81,7 @@ function buildNodesAndEdges(orgData) {
     }
   }
 
-  // Handle multiple root nodes
+
   let startX = 0;
   orgData.forEach((root) => {
     const width = getSubtreeWidth(root);

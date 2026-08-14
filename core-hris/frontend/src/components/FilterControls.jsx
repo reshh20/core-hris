@@ -18,7 +18,7 @@ export default function FilterControls({
 
   return (
     <div className="flex flex-wrap items-center gap-3">
-      {/* Department Filter */}
+
       <select
         value={filters.department_id}
         onChange={(e) => onFilterChange('department_id', e.target.value)}
@@ -34,7 +34,7 @@ export default function FilterControls({
         ))}
       </select>
 
-      {/* Status Filter */}
+
       <select
         value={filters.status}
         onChange={(e) => onFilterChange('status', e.target.value)}
@@ -49,7 +49,7 @@ export default function FilterControls({
         ))}
       </select>
 
-      {/* Clear Filters */}
+
       {hasActiveFilters && (
         <button
           onClick={onClear}

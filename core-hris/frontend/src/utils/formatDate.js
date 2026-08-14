@@ -1,6 +1,4 @@
-/**
- * Format a date string to a human-readable format.
- */
+
 export function formatDate(dateStr) {
   if (!dateStr) return 'N/A';
   try {
@@ -15,9 +13,7 @@ export function formatDate(dateStr) {
   }
 }
 
-/**
- * Format a date to short format.
- */
+
 export function formatDateShort(dateStr) {
   if (!dateStr) return 'N/A';
   try {

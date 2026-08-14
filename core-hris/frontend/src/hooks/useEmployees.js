@@ -1,9 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { fetchEmployees, fetchDepartments } from '../services/employeeService';
 
-/**
- * Custom hook for managing employee list state with search/filter.
- */
+
 export function useEmployees() {
   const [employees, setEmployees] = useState([]);
   const [departments, setDepartments] = useState([]);
@@ -39,7 +37,7 @@ export function useEmployees() {
       const data = await fetchDepartments();
       setDepartments(data);
     } catch {
-      // Silently fail — departments are secondary
+
     }
   }, []);
 

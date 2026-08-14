@@ -1,9 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { fetchEmployee } from '../services/employeeService';
 
-/**
- * Custom hook for fetching a single employee's details.
- */
+
 export function useEmployee(id) {
   const [employee, setEmployee] = useState(null);
   const [loading, setLoading] = useState(true);

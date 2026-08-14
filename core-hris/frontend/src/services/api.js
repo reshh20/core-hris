@@ -8,12 +8,12 @@ const api = axios.create({
   timeout: 15000,
 });
 
-// Response interceptor for consistent error handling
+
 api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response) {
-      // Server returned an error response
+
       const detail = error.response.data?.detail;
       if (detail && typeof detail === 'object') {
         error.friendlyMessage = detail.message || 'An error occurred';

@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
   ArrowLeft,
@@ -10,6 +11,8 @@ import {
   UserCircle,
   Users,
   Hash,
+  Pencil,
+  Trash2,
 } from 'lucide-react';
 import { useEmployee } from '../hooks/useEmployee';
 import EmployeeAvatar from '../components/EmployeeAvatar';
@@ -17,6 +20,8 @@ import StatusBadge from '../components/StatusBadge';
 import EmployeeInfoCard from '../components/EmployeeInfoCard';
 import LoadingState from '../components/LoadingState';
 import ErrorState from '../components/ErrorState';
+import EditEmployeeModal from '../components/EditEmployeeModal';
+import DeleteConfirmModal from '../components/DeleteConfirmModal';
 import { formatFullName } from '../utils/formatName';
 import { formatDate } from '../utils/formatDate';
 
@@ -38,6 +43,8 @@ export default function EmployeeProfile() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { employee, loading, error, refresh } = useEmployee(id);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   if (loading) return <LoadingState message="Loading employee details..." />;
   if (error) {
@@ -60,19 +67,43 @@ export default function EmployeeProfile() {
 
   const fullName = formatFullName(employee.first_name, employee.last_name);
 
+  const handleDeleteSuccess = () => {
+    navigate('/employees');
+  };
+
   return (
     <div className="p-8 max-w-5xl">
-      {/* Back Button */}
-      <button
-        onClick={() => navigate('/employees')}
-        className="flex items-center gap-2 text-sm text-surface-500 hover:text-surface-700 mb-6 transition-colors"
-        id="back-to-employees"
-      >
-        <ArrowLeft className="w-4 h-4" />
-        Back to Employees
-      </button>
 
-      {/* Profile Header */}
+      <div className="flex items-center justify-between mb-6">
+        <button
+          onClick={() => navigate('/employees')}
+          className="flex items-center gap-2 text-sm text-surface-500 hover:text-surface-700 transition-colors"
+          id="back-to-employees"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Back to Employees
+        </button>
+
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setShowEditModal(true)}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-primary-600 border border-primary-300 hover:bg-primary-50 transition-colors"
+            id="edit-employee-btn"
+          >
+            <Pencil className="w-4 h-4" />
+            Edit
+          </button>
+          <button
+            onClick={() => setShowDeleteModal(true)}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-red-600 border border-red-300 hover:bg-red-50 transition-colors"
+            id="delete-employee-btn"
+          >
+            <Trash2 className="w-4 h-4" />
+            Delete
+          </button>
+        </div>
+      </div>
+
       <div className="bg-white rounded-xl border border-surface-200 shadow-sm p-6 mb-6">
         <div className="flex flex-col sm:flex-row items-start gap-5">
           <EmployeeAvatar
@@ -94,9 +125,8 @@ export default function EmployeeProfile() {
         </div>
       </div>
 
-      {/* Info Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-        {/* Personal Information */}
+
         <div className="bg-white rounded-xl border border-surface-200 shadow-sm p-6">
           <h2 className="text-base font-semibold text-surface-800 mb-4 flex items-center gap-2">
             <UserCircle className="w-5 h-5 text-primary-500" />
@@ -111,7 +141,6 @@ export default function EmployeeProfile() {
           </div>
         </div>
 
-        {/* Employment Information */}
         <div className="bg-white rounded-xl border border-surface-200 shadow-sm p-6">
           <h2 className="text-base font-semibold text-surface-800 mb-4 flex items-center gap-2">
             <Briefcase className="w-5 h-5 text-primary-500" />
@@ -134,9 +163,8 @@ export default function EmployeeProfile() {
         </div>
       </div>
 
-      {/* Reporting Information */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Manager */}
+
         <div className="bg-white rounded-xl border border-surface-200 shadow-sm p-6">
           <h2 className="text-base font-semibold text-surface-800 mb-4 flex items-center gap-2">
             <UserCircle className="w-5 h-5 text-primary-500" />
@@ -151,7 +179,6 @@ export default function EmployeeProfile() {
           )}
         </div>
 
-        {/* Direct Reports */}
         <div className="bg-white rounded-xl border border-surface-200 shadow-sm p-6">
           <h2 className="text-base font-semibold text-surface-800 mb-4 flex items-center gap-2">
             <Users className="w-5 h-5 text-primary-500" />
@@ -173,6 +200,20 @@ export default function EmployeeProfile() {
           )}
         </div>
       </div>
+
+      <EditEmployeeModal
+        isOpen={showEditModal}
+        onClose={() => setShowEditModal(false)}
+        onSuccess={refresh}
+        employee={employee}
+      />
+
+      <DeleteConfirmModal
+        isOpen={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        onSuccess={handleDeleteSuccess}
+        employee={employee}
+      />
     </div>
   );
 }

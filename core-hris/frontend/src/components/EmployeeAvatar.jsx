@@ -11,9 +11,7 @@ const AVATAR_COLORS = [
   'from-teal-400 to-teal-600',
 ];
 
-/**
- * Deterministic color based on name.
- */
+
 function getColorClass(firstName, lastName) {
   const str = `${firstName}${lastName}`;
   let hash = 0;
